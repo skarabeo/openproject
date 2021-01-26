@@ -30,6 +30,8 @@
 module IssuesHelper
   include ApplicationHelper
 
+  # TODO: remove
+
   # Renders a HTML/CSS tooltip
   #
   # To use, a trigger div is needed.  This is a div with the class of "tooltip"

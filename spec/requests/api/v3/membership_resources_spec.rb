@@ -350,11 +350,14 @@ describe 'API v3 memberships resource', type: :request, content_type: :json do
       own_member
       login_as current_user
 
-      post path, body
+      perform_enqueued_jobs do
+        post path, body
+      end
     end
 
     shared_examples_for 'successful member creation' do
       let(:role) { defined?(expected_role) ? expected_role : other_role }
+      let(:expected_receivers) { defined?(receivers) ? receivers : [principal] }
 
       it 'responds with 201' do
         expect(last_response.status).to eq(201)
@@ -388,6 +391,14 @@ describe 'API v3 memberships resource', type: :request, content_type: :json do
           .to be_json_eql(api_v3_paths.role(role.id).to_json)
           .at_path('_links/roles/0/href')
       end
+
+      it 'sends a mail to the added user' do
+        expect(ActionMailer::Base.deliveries.size)
+          .to eql expected_receivers.length
+
+        expect(ActionMailer::Base.deliveries.map(&:to).flatten)
+          .to match_array expected_receivers.map(&:mail)
+      end
     end
 
     context 'for a user' do
@@ -396,8 +407,17 @@ describe 'API v3 memberships resource', type: :request, content_type: :json do
 
     context 'for a group' do
       it_behaves_like 'successful member creation' do
-        let(:group) { FactoryBot.create(:group) }
+        let(:group) do
+          FactoryBot.create(:group).tap do |group|
+            users.each do |user|
+              GroupUser.create(group_id: group.id, user_id: user.id)
+              #group.add_members! users
+            end
+          end
+        end
         let(:principal) { group }
+        let(:users) { [FactoryBot.create(:user), FactoryBot.create(:user)] }
+        let(:receivers) { users }
         let(:principal_path) { api_v3_paths.group(group.id) }
         let(:body) do
           {
