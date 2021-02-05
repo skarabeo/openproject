@@ -1,6 +1,18 @@
 name: Core/Test
+# https://securitylab.github.com/research/github-actions-preventing-pwn-requests
 on:
   push:
+    branches:
+      - dev
+      - release/*
+    paths-ignore:
+      - 'docs/**'
+      - 'help/**'
+  pull_request:
+    types: [opened, reopened, synchronize]
+    paths-ignore:
+      - 'docs/**'
+      - 'help/**'
 
 jobs:
   units:
