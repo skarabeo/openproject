@@ -31,9 +31,9 @@ require 'spec_helper'
 describe OpenProject::Meeting::DefaultData, with_clean_fixture: true do
   let(:seeder) { BasicData::RoleSeeder.new }
 
-  let(:roles) { [member, reader] }
   let(:member) { OpenProject::Meeting::DefaultData.member_role }
   let(:reader) { OpenProject::Meeting::DefaultData.reader_role }
+  let(:roles) { [member, reader] }
 
   let(:member_permissions) { OpenProject::Meeting::DefaultData.member_permissions }
   let(:reader_permissions) { OpenProject::Meeting::DefaultData.reader_permissions }
