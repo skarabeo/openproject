@@ -5,6 +5,7 @@ on:
     branches:
       - dev
       - release/*
+      - debug-one-off-runners
     paths-ignore:
       - 'docs/**'
       - 'help/**'
