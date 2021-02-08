@@ -101,7 +101,10 @@ namespace :parallel do
     end
     group_options += " -o '#{rspec_options}'" if rspec_options.length.positive?
 
-    sh "bundle exec parallel_test --type rspec #{group_options} #{folders} #{pattern}"
+    sh "bundle exec parallel_test --verbose-rerun-command --type rspec #{group_options} #{folders} #{pattern}"
+    # test balance groups
+    # AWS screenshots
+    # failure outputs
   end
 
   desc 'Run all suites in parallel (one after another)'

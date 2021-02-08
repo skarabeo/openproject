@@ -26,7 +26,7 @@ execute() {
 	if [ $(id -u) -eq 0 ]; then
 		su $USER -c "$@"
 	else
-		bash -c "$@"
+		bash -x -c "$@"
 	fi
 }
 
@@ -34,6 +34,7 @@ if [ "$1" == "setup-tests" ]; then
 	echo "Preparing environment for running tests..."
 	shift
 
+	execute "ls -al tmp"
 	execute "cp docker/ci/database.yml config/"
 
 	for i in $(seq 0 $JOBS); do
@@ -47,6 +48,7 @@ if [ "$1" == "setup-tests" ]; then
 	execute "time bundle install -j$JOBS"
 	execute "TEST_ENV_NUMBER=0 time bundle exec rake db:create db:migrate db:schema:dump webdrivers:chromedriver:update webdrivers:geckodriver:update"
 	execute "time bundle exec rake parallel:create parallel:load_schema"
+	execute "ls -al tmp"
 fi
 
 if [ "$1" == "run-units" ]; then
@@ -55,7 +57,8 @@ if [ "$1" == "run-units" ]; then
 	execute "time bundle exec rspec -I spec_legacy spec_legacy"
 	execute "time bundle exec rake parallel:units"
 	if [ ! $? -eq 0 ]; then
-		execute "cat tmp/parallel_runtime_rspec.log | grep -Ev 'passed|unknown|pending'"
+		execute "ls -al tmp"
+		execute "cat tmp/parallel_runtime_rspec.log"
 		exit 1
 	fi
 fi
@@ -67,7 +70,8 @@ if [ "$1" == "run-features" ]; then
 	execute "cp -rp config/frontend_assets.manifest.json public/assets/frontend_assets.manifest.json"
 	execute "time bundle exec rake parallel:features"
 	if [ ! $? -eq 0 ]; then
-		execute "cat tmp/parallel_runtime_rspec.log | grep -Ev 'passed|unknown|pending'"
+		execute "ls -al tmp"
+		execute "cat tmp/parallel_runtime_rspec.log"
 		exit 1
 	fi
 fi
