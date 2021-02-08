@@ -27,6 +27,8 @@
 #++
 require_relative '../page'
 
+require_relative "../page"
+
 module Pages
   module Projects
     class Destroy < ::Pages::Page
