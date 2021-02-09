@@ -17,5 +17,6 @@ services:
       - ".:/home/dev/openproject"
       - "${CI_CACHE_PATH:-/tmp/}op-bundle:/usr/local/bundle"
       - "${CI_CACHE_PATH:-/tmp/}op-node:/home/dev/openproject/frontend/node_modules"
+      - "${CI_CACHE_PATH:-/tmp/}op-tmp:/home/dev/openproject/tmp"
     networks:
       - testing
