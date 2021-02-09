@@ -104,7 +104,17 @@ namespace :parallel do
       rspec_options += " #{additional_options}"
     end
     group_options += " -o '#{rspec_options}'" if rspec_options.length.positive?
-    sh "bundle exec parallel_test --verbose-rerun-command --type rspec #{parallel_options} #{group_options} #{folders} #{pattern}"
+    if runtime_filename
+      File.open(Rais.root.join(".rspec_parallel").to_s, "w+") do |f|
+        f.puts "--format progress"
+        f.puts "--format ParallelTests::RSpec::SummaryLogger --out tmp/parallel_summary.log"
+        f.puts "--format ParallelTests::RSpec::RuntimeLogger --out tmp/#{runtime_filename}.log"
+      end
+    end
+    p File.read(Rais.root.join(".rspec_parallel").to_s)
+    cmd "bundle exec parallel_test --verbose-rerun-command --type rspec #{parallel_options} #{group_options} #{folders} #{pattern}"
+    p [:cmd, cmd]
+    sh cmd
   end
 
   desc 'Run all suites in parallel (one after another)'

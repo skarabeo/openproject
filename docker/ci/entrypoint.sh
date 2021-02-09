@@ -31,6 +31,10 @@ execute() {
 	fi
 }
 
+cleanup() {
+        rm -rf tmp/cache/parallel*
+}
+
 if [ "$1" == "setup-tests" ]; then
 	echo "Preparing environment for running tests..."
 	shift
@@ -57,7 +61,11 @@ if [ "$1" == "run-units" ]; then
 	execute "time bundle exec rspec -I spec_legacy spec_legacy"
 	if ! execute "time bundle exec rake parallel:units" ; then
 		execute "cat tmp/parallel_summary.log"
+		cleanup
 		exit 1
+	else
+		cleanup
+		exit 0
 	fi
 fi
 
@@ -67,8 +75,12 @@ if [ "$1" == "run-features" ]; then
 	execute "bundle exec rake assets:precompile assets:clean"
 	execute "cp -rp config/frontend_assets.manifest.json public/assets/frontend_assets.manifest.json"
 	if ! execute "time bundle exec rake parallel:features" ; then
+		cleanup
 		execute "cat tmp/parallel_summary.log"
 		exit 1
+	else
+		cleanup
+		exit 0
 	fi
 fi
 

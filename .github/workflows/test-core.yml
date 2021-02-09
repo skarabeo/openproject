@@ -31,7 +31,10 @@ jobs:
       uses: actions/cache@v2
       with:
         path: /tmp/${{ github.sha }}
-        key: ${{ runner.os }}-core-tests
+        key: ${{ runner.os }}-core-tests-units-${{ hashFiles('**/Gemfile.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-core-tests-units-
+          ${{ runner.os }}-core-tests-
     - name: test
       run: |
         cp .env.example .env
@@ -58,7 +61,11 @@ jobs:
       uses: actions/cache@v2
       with:
         path: /tmp/${{ github.sha }}
-        key: ${{ runner.os }}-core-tests
+        key: ${{ runner.os }}-core-tests-features-${{ hashFiles('**/Gemfile.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-core-tests-features-
+          ${{ runner.os }}-core-tests-
+
     - name: test
       run: |
         cp .env.example .env
