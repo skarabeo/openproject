@@ -13,7 +13,7 @@ module OpenProject
       end
 
       def member_role
-        Role.find_by name: I18n.t(:default_role_member)
+        Role.find_by! name: I18n.t(:default_role_member)
       end
 
       def member_permissions
@@ -32,7 +32,7 @@ module OpenProject
       end
 
       def reader_role
-        Role.find_by name: I18n.t(:default_role_reader)
+        Role.find_by! name: I18n.t(:default_role_reader)
       end
 
       def reader_permissions
