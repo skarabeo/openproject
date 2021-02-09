@@ -111,9 +111,7 @@ namespace :parallel do
         f.puts "--format ParallelTests::RSpec::RuntimeLogger --out tmp/#{runtime_filename}"
       end
     end
-    p File.read(Rails.root.join(".rspec_parallel").to_s)
     cmd = "bundle exec parallel_test --verbose-rerun-command --type rspec #{parallel_options} #{group_options} #{folders} #{pattern}"
-    p [:cmd, cmd]
     sh cmd
   end
 
