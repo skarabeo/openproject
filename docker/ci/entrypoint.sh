@@ -2,6 +2,7 @@
 set -e
 
 export PGBIN="$(pg_config --bindir)"
+export JOBS="${CI_JOBS:=$(nproc)}"
 # for parallel rspec
 export PARALLEL_TEST_PROCESSORS=$JOBS
 

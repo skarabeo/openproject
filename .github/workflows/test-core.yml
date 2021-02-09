@@ -23,7 +23,6 @@ jobs:
     timeout-minutes: 30
     env:
       CI_CACHE_PATH: "/tmp/${{ github.sha }}/"
-      CI_JOBS: 16
       CI_RETRY_COUNT: 3
       LOCAL_DEV_CHECK: 1
     steps:
@@ -50,7 +49,6 @@ jobs:
     runs-on: [self-hosted-autoscale,public]
     timeout-minutes: 200
     env:
-      CI_JOBS: 16
       CI_CACHE_PATH: "/tmp/${{ github.sha }}/"
       LOCAL_DEV_CHECK: 1
       CI_RETRY_COUNT: 3
