@@ -108,7 +108,7 @@ namespace :parallel do
       File.open(Rails.root.join(".rspec_parallel").to_s, "w+") do |f|
         f.puts "--format progress"
         f.puts "--format ParallelTests::RSpec::SummaryLogger --out tmp/parallel_summary.log"
-        f.puts "--format ParallelTests::RSpec::RuntimeLogger --out tmp/#{runtime_filename}.log"
+        f.puts "--format ParallelTests::RSpec::RuntimeLogger --out tmp/#{runtime_filename}"
       end
     end
     p File.read(Rails.root.join(".rspec_parallel").to_s)
