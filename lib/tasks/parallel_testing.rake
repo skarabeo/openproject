@@ -87,7 +87,7 @@ namespace :parallel do
     Plugins::LoadPathHelper.spec_load_paths.join(' ')
   end
 
-  def run_specs(parsed_options, folders, pattern = '', additional_options: nil)
+  def run_specs(parsed_options, folders, pattern = '', additional_options: nil, runtime_filename: nil)
     check_for_pending_migrations
 
     group_options = group_option_string(parsed_options)
@@ -100,11 +100,11 @@ namespace :parallel do
       rspec_options += " #{additional_options}"
     end
     group_options += " -o '#{rspec_options}'" if rspec_options.length.positive?
+    if runtime_filename
+      group_options += " --format ParallelTests::RSpec::SummaryLogger --out tmp/#{runtime_filename}"
+    end
 
     sh "bundle exec parallel_test --verbose-rerun-command --type rspec #{group_options} #{folders} #{pattern}"
-    # test balance groups
-    # AWS screenshots
-    # failure outputs
   end
 
   desc 'Run all suites in parallel (one after another)'
@@ -175,7 +175,7 @@ namespace :parallel do
     ParallelParser.with_args(ARGV) do |options|
       ARGV.each { |a| task(a.to_sym) {} }
 
-      run_specs options, all_spec_paths, pattern
+      run_specs options, all_spec_paths, pattern, runtime_filename: "rspec_features_runtime.log"
     end
   end
 
@@ -186,7 +186,7 @@ namespace :parallel do
     ParallelParser.with_args(ARGV) do |options|
       ARGV.each { |a| task(a.to_sym) {} }
 
-      run_specs options, all_spec_paths, pattern
+      run_specs options, all_spec_paths, pattern, runtime_filename: "rspec_units_runtime.log"
     end
   end
 end
