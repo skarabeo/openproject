@@ -26,7 +26,7 @@ execute() {
 	if [ $(id -u) -eq 0 ]; then
 		su $USER -c "$@"
 	else
-		bash -x -c "$@"
+		bash -c "$@"
 	fi
 }
 
@@ -55,8 +55,7 @@ if [ "$1" == "run-units" ]; then
 	shift
 	execute "cd frontend && npm install && npm run test"
 	execute "time bundle exec rspec -I spec_legacy spec_legacy"
-	execute "time bundle exec rake parallel:units"
-	if [ ! $? -eq 0 ]; then
+	if ! execute "time bundle exec rake parallel:units" ; then
 		execute "ls -al tmp"
 		execute "cat tmp/parallel_runtime_rspec.log"
 		exit 1
@@ -68,8 +67,7 @@ if [ "$1" == "run-features" ]; then
 	execute "cd frontend; npm install ; cd -"
 	execute "bundle exec rake assets:precompile assets:clean"
 	execute "cp -rp config/frontend_assets.manifest.json public/assets/frontend_assets.manifest.json"
-	execute "time bundle exec rake parallel:features"
-	if [ ! $? -eq 0 ]; then
+	if ! execute "time bundle exec rake parallel:features" ; then
 		execute "ls -al tmp"
 		execute "cat tmp/parallel_runtime_rspec.log"
 		exit 1
