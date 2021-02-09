@@ -91,8 +91,12 @@ namespace :parallel do
     check_for_pending_migrations
 
     group_options = group_option_string(parsed_options)
+    parallel_options = ""
+    rspec_options = ""
 
-    rspec_options = ''
+    if runtime_filename
+      parallel_options += " --runtime-log tmp/#{runtime_filename}"
+    end
     if parsed_options[:seed]
       rspec_options += "--seed #{parsed_options[:seed]}"
     end
@@ -100,11 +104,7 @@ namespace :parallel do
       rspec_options += " #{additional_options}"
     end
     group_options += " -o '#{rspec_options}'" if rspec_options.length.positive?
-    if runtime_filename
-      group_options += " --format ParallelTests::RSpec::SummaryLogger --out tmp/#{runtime_filename}"
-    end
-
-    sh "bundle exec parallel_test --verbose-rerun-command --type rspec #{group_options} #{folders} #{pattern}"
+    sh "bundle exec parallel_test --verbose-rerun-command --type rspec #{parallel_options} #{group_options} #{folders} #{pattern}"
   end
 
   desc 'Run all suites in parallel (one after another)'
@@ -175,7 +175,7 @@ namespace :parallel do
     ParallelParser.with_args(ARGV) do |options|
       ARGV.each { |a| task(a.to_sym) {} }
 
-      run_specs options, all_spec_paths, pattern, runtime_filename: "rspec_features_runtime.log"
+      run_specs options, all_spec_paths, pattern, runtime_filename: "parallel_features_runtime.log"
     end
   end
 
@@ -186,7 +186,7 @@ namespace :parallel do
     ParallelParser.with_args(ARGV) do |options|
       ARGV.each { |a| task(a.to_sym) {} }
 
-      run_specs options, all_spec_paths, pattern, runtime_filename: "rspec_units_runtime.log"
+      run_specs options, all_spec_paths, pattern, runtime_filename: "parallel_units_runtime.log"
     end
   end
 end

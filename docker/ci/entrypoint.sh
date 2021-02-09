@@ -49,7 +49,6 @@ if [ "$1" == "setup-tests" ]; then
 	execute "time bundle install -j$JOBS"
 	execute "TEST_ENV_NUMBER=0 time bundle exec rake db:create db:migrate db:schema:dump webdrivers:chromedriver:update webdrivers:geckodriver:update"
 	execute "time bundle exec rake parallel:create parallel:load_schema"
-	execute "ls -al tmp"
 fi
 
 if [ "$1" == "run-units" ]; then
@@ -57,7 +56,7 @@ if [ "$1" == "run-units" ]; then
 	execute "cd frontend && npm install && npm run test"
 	execute "time bundle exec rspec -I spec_legacy spec_legacy"
 	if ! execute "time bundle exec rake parallel:units" ; then
-		execute "cat tmp/rspec_units_runtime.log"
+		execute "cat tmp/parallel_summary.log"
 		exit 1
 	fi
 fi
@@ -68,7 +67,7 @@ if [ "$1" == "run-features" ]; then
 	execute "bundle exec rake assets:precompile assets:clean"
 	execute "cp -rp config/frontend_assets.manifest.json public/assets/frontend_assets.manifest.json"
 	if ! execute "time bundle exec rake parallel:features" ; then
-		execute "cat tmp/rspec_features_runtime.log"
+		execute "cat tmp/parallel_summary.log"
 		exit 1
 	fi
 fi
