@@ -46,7 +46,6 @@ jobs:
         docker-compose -f docker-compose.ci.yml down --remove-orphans -t 10
         sudo chown -R $(whoami):$(id -ng) $CI_CACHE_PATH
   features:
-    needs: units
     name: Features
     if: github.repository == 'opf/openproject'
     runs-on: [self-hosted-autoscale]
@@ -65,7 +64,6 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-core-tests-features-
           ${{ runner.os }}-core-tests-
-
     - name: test
       run: |
         cp .env.example .env

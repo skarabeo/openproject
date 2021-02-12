@@ -64,7 +64,6 @@ if [ "$1" == "run-units" ]; then
 		cleanup
 		exit 1
 	else
-		execute "cat tmp/parallel_units_runtime* > tmp/parallel_units_runtime.log"
 		cleanup
 		exit 0
 	fi
@@ -80,7 +79,6 @@ if [ "$1" == "run-features" ]; then
 		execute "cat tmp/parallel_summary.log"
 		exit 1
 	else
-		execute "cat tmp/parallel_features_runtime* > tmp/parallel_features_runtime.log"
 		cleanup
 		exit 0
 	fi
