@@ -49,7 +49,7 @@ jobs:
     needs: units
     name: Features
     if: github.repository == 'opf/openproject'
-    runs-on: [self-hosted-autoscale,public]
+    runs-on: [self-hosted-autoscale]
     timeout-minutes: 200
     env:
       CI_CACHE_PATH: "/tmp/${{ github.sha }}/"
