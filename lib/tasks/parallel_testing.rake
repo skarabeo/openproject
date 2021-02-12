@@ -108,15 +108,13 @@ namespace :parallel do
       File.open(Rails.root.join(".rspec_parallel").to_s, "w+") do |f|
         f.puts "--format progress"
         f.puts "--format ParallelTests::RSpec::SummaryLogger --out tmp/parallel_summary.log"
-        # parallel_test has a race condition to write logs when running in parallel (!)
-        # https://github.com/heroku/heroku-buildpack-php/commit/e4994605a8712c8db09c433b2335429b4d14085d
-        f.puts "--format ParallelTests::RSpec::RuntimeLogger --out /dev/stderr"
+        f.puts "--format ParallelTests::RSpec::RuntimeLogger --out tmp/#{runtime_filename}"
       end
     end
     cmd = "bundle exec parallel_test --verbose --allowed-missing 75 --verbose-rerun-command --type rspec #{parallel_options} #{group_options} #{folders} #{pattern}"
-    if runtime_filename
-      cmd += " 2>&1 | tee tmp/#{runtime_filename}"
-    end
+    # if runtime_filename
+    #   cmd += " 2>&1 | tee tmp/#{runtime_filename}"
+    # end
     sh cmd
   end
 

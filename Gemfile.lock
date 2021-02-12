@@ -1,4 +1,12 @@
 GIT
+  remote: https://github.com/crohr/parallel_tests.git
+  revision: fd276795e96c1087028464b10dd229d22334beb1
+  ref: fix-race-condition-runtime-output
+  specs:
+    parallel_tests (3.4.0)
+      parallel
+
+GIT
   remote: https://github.com/opf/omniauth
   revision: fe862f986b2e846e291784d2caa3d90a658c67f0
   ref: fe862f986b2e846e291784d2caa3d90a658c67f0
@@ -622,8 +630,6 @@ GEM
     openproject-token (2.1.3)
       activemodel
     parallel (1.20.1)
-    parallel_tests (3.4.0)
-      parallel
     parser (3.0.0.0)
       ast (~> 2.4.1)
     pdf-core (0.9.0)
@@ -1024,7 +1030,7 @@ DEPENDENCIES
   openproject-webhooks!
   openproject-xls_export!
   overviews!
-  parallel_tests (~> 3.1)
+  parallel_tests!
   pg (~> 1.2.2)
   plaintext (~> 0.3.2)
   posix-spawn (~> 0.3.13)
