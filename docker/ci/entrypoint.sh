@@ -39,8 +39,9 @@ if [ "$1" == "setup-tests" ]; then
 	echo "Preparing environment for running tests..."
 	shift
 
-	execute "ls -al tmp"
+	execute "mkdir -p tmp"
 	execute "cp docker/ci/database.yml config/"
+	execute "cp docker/ci/parallel*.log tmp/"
 
 	for i in $(seq 0 $JOBS); do
 		folder="$CAPYBARA_DOWNLOADED_FILE_DIR/$i"
